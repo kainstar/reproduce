@@ -1,0 +1,12 @@
+
+**/dist
+**/bin-dist
+**/lib
+doc_build
+public/onig.wasm
+public/docs.en.json
+public/docs.zh.json
+public/vs
+
+# rspress build output
+doc_build

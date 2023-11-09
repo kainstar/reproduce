@@ -1,0 +1,634 @@
+diff --git a/i18n/index.d.ts b/i18n/index.d.ts
+index fe1cc8952a58e2bf75eaf9d8aea084689d31000f..e7c9ede91fea8c9c127cd680552aed8805e30415 100644
+--- a/i18n/index.d.ts
++++ b/i18n/index.d.ts
+@@ -3,11 +3,11 @@ import type { Trans } from 'react-i18next';
+ import { type _Dict, type Item } from './dict.js';
+ export type Language = 'zh' | 'en' | 'ja' | 'ko';
+ export declare const LANGUAGES: readonly ["zh", "en", "ja", "ko"];
+-declare global {
+-    interface Window {
+-        language: Language;
+-    }
+-}
++// declare global {
++//     interface Window {
++//         language: Language;
++//     }
++// }
+ /**
+     提供翻译文本功能，自动解析当前语言
+     @see https://github.com/ShenHongFei/xshell/tree/master/i18n
+diff --git a/i18n/instance.js b/i18n/instance.js
+index c8c9c8e9e4614a69edc3a0bf7b6be44156d25eb8..aabdd6a0d3eaad08b4895ccfdcda85befee39903 100644
+--- a/i18n/instance.js
++++ b/i18n/instance.js
+@@ -1,5 +1,5 @@
+ import { I18N } from './index.js';
+-import _dict from './dict.json' assert { type: 'json' };
++import _dict from './dict.json';
+ export let i18n = new I18N(_dict);
+ const { t, language } = i18n;
+ export { t, language };
+diff --git a/prototype.browser.d.ts b/prototype.browser.d.ts
+index bf824277885302f15fafa1c4bd2165d1007ccd3d..8ca060390b83538c63302476ccb9e8721dfc2c8a 100644
+--- a/prototype.browser.d.ts
++++ b/prototype.browser.d.ts
+@@ -1,131 +1,131 @@
+ /** 在浏览器端修改 prototype，需要更加小心 */
+-declare global {
+-    interface String {
+-        readonly width: number;
+-        /** 截取字符串不超过 width 显示宽度的部分，并保留颜色
+-            找到并记录能容纳 字符串 + … 的最后一个字符的位置 i_fitted
+-                若完整的字符串长度超过 width，返回 slice(0, i_fitted + 1) + …
+-                否则                          返回 this
+-         */
+-        truncate(this: string, width: number): string;
+-        /** pad string to `<width>`
+-            - character?: `' '`
+-            - position?: `'right'` */
+-        pad(this: string, width: number, { character, position }?: {
+-            character?: string;
+-            position?: 'left' | 'right';
+-        }): string;
+-        limit(this: string, width: number, { character, position }?: {
+-            character?: string;
+-            position?: 'left' | 'right';
+-        }): string;
+-        to_regexp(this: string, preservations?: string, flags?: string): RegExp;
+-        /** 字符串模式替换
+-            - pattern: 匹配部分的格式
+-            - pattern_: 替换后的格式
+-            - preservations?: `''` 保留的正则表达式字符
+-            - flags?: `''` 正则匹配选项
+-            - transformer?: `(name, matched) => matched || ''` placeholder transformer
+-            - pattern_placeholder?: `/\{.*?\}/g`
++// declare global {
++//     interface String {
++//         readonly width: number;
++//         /** 截取字符串不超过 width 显示宽度的部分，并保留颜色
++//             找到并记录能容纳 字符串 + … 的最后一个字符的位置 i_fitted
++//                 若完整的字符串长度超过 width，返回 slice(0, i_fitted + 1) + …
++//                 否则                          返回 this
++//          */
++//         truncate(this: string, width: number): string;
++//         /** pad string to `<width>`
++//             - character?: `' '`
++//             - position?: `'right'` */
++//         pad(this: string, width: number, { character, position }?: {
++//             character?: string;
++//             position?: 'left' | 'right';
++//         }): string;
++//         limit(this: string, width: number, { character, position }?: {
++//             character?: string;
++//             position?: 'left' | 'right';
++//         }): string;
++//         to_regexp(this: string, preservations?: string, flags?: string): RegExp;
++//         /** 字符串模式替换
++//             - pattern: 匹配部分的格式
++//             - pattern_: 替换后的格式
++//             - preservations?: `''` 保留的正则表达式字符
++//             - flags?: `''` 正则匹配选项
++//             - transformer?: `(name, matched) => matched || ''` placeholder transformer
++//             - pattern_placeholder?: `/\{.*?\}/g`
+             
+-            ```ts
+-            'g:/acgn/海贼王/[Skytree][海贼王][One_Piece][893][GB_BIG5_JP][X264_AAC][1080P][CRRIP][天空树双语字幕组].mkv'.refmt(
+-                '{dirp}/[Skytree][海贼王][{ en_name: \\w+ }][{ episode: \\d+ }][GB_BIG5_JP][{encoding}_AAC][1080P][CRRIP][天空树双语字幕组].{format}',
+-                'g:/acgn/海贼王/{episode} {encoding}.{format}',
+-                '\\+',
+-                'i',
+-                (name, value) => name === 'episode'  ?  String(+value + 1)  :  value.toLowerCase()
+-            )
+-            ```
+-         */
+-        refmt(this: string, pattern: string, pattern_: string, preservations?: string, flags?: string, transformer?: (name: string, value: string, placeholders: {
+-            [name: string]: string;
+-        }) => string, pattern_placeholder?: RegExp): string;
+-        /** 字符串模式搜索
+-            ```ts
+-            'git+https://github.com/tamino-martinius/node-ts-dedent-123.git'.find(
+-                '^{protocol:[\\w+]+}://{hostname:[\\w\\.]+}/{username}/{project}-{index:\\d+}.{suffix}', '^', 'i'
+-            )
+-            {
+-                protocol: 'git+https',
+-                hostname: 'github.com',
+-                ...
+-            }
+-            ```
++//             ```ts
++//             'g:/acgn/海贼王/[Skytree][海贼王][One_Piece][893][GB_BIG5_JP][X264_AAC][1080P][CRRIP][天空树双语字幕组].mkv'.refmt(
++//                 '{dirp}/[Skytree][海贼王][{ en_name: \\w+ }][{ episode: \\d+ }][GB_BIG5_JP][{encoding}_AAC][1080P][CRRIP][天空树双语字幕组].{format}',
++//                 'g:/acgn/海贼王/{episode} {encoding}.{format}',
++//                 '\\+',
++//                 'i',
++//                 (name, value) => name === 'episode'  ?  String(+value + 1)  :  value.toLowerCase()
++//             )
++//             ```
++//          */
++//         refmt(this: string, pattern: string, pattern_: string, preservations?: string, flags?: string, transformer?: (name: string, value: string, placeholders: {
++//             [name: string]: string;
++//         }) => string, pattern_placeholder?: RegExp): string;
++//         /** 字符串模式搜索
++//             ```ts
++//             'git+https://github.com/tamino-martinius/node-ts-dedent-123.git'.find(
++//                 '^{protocol:[\\w+]+}://{hostname:[\\w\\.]+}/{username}/{project}-{index:\\d+}.{suffix}', '^', 'i'
++//             )
++//             {
++//                 protocol: 'git+https',
++//                 hostname: 'github.com',
++//                 ...
++//             }
++//             ```
+             
+-            - preservations?: `''` 保留的正则表达式字符
+-            - flags?: `''` 正则匹配选项
+-            - pattern_placeholder?: `/\{.*?\}/g`
+-        */
+-        find(this: string, pattern: string, preservations?: string, flags?: string, pattern_placeholder?: RegExp): Record<string, string>;
+-        /** - type?: `'single'` */
+-        quote(this: string, type?: keyof typeof quotes | 'psh'): string;
+-        /** - shape?: `'parenthesis'` */
+-        bracket(this: string, shape?: keyof typeof brackets): string;
+-        surround(this: string, left: string, right?: string): string;
+-        surround_tag(this: string, tag_name: string): string;
+-        to_lf(this: string): string;
+-        /** 'xxx'.replace(/pattern/g, '')
+-            如果 pattern 是 string 则在创建 RegExp 时自动加上 flags (默认 'g'), 否则忽略 flags */
+-        rm(this: string, pattern: string | RegExp, flags?: string): string;
+-        /** 将 string 划分为行，并去掉最后一个 \n 之后的 '' */
+-        split_lines(this: string): string[];
+-        split_indent(this: string): {
+-            indent: number;
+-            text: string;
+-        };
+-        space(this: string): string;
+-        /** 等价于 .endsWith('/') */
+-        isdir: boolean;
+-        /** 以 `/` 分割的路径，可能以 / 结尾 */
+-        fp: string;
+-        /** 以 `/` 分割的文件夹路径，一定以 / 结尾 */
+-        fpd: string;
+-        /** 父文件夹路径 (path.dirname)，一定以 `/` 结尾 */
+-        fdir: string;
+-        /** 文件名 (path.basename 的结果), 保留结尾的 /，如:
+-            - D:/0/aaa.txt -> aaa.txt
+-            - D:/aaa/ -> aaa/ */
+-        fname: string;
+-        /** .txt */
+-        fext: string;
+-    }
+-    interface Date {
+-        /** - ms?: `false` 显示到 ms */
+-        to_str(this: Date, ms?: boolean): string;
+-        to_date_str(this: Date): string;
+-        /** - ms?: `false` 显示到 ms */
+-        to_time_str(this: Date, ms?: boolean): string;
+-    }
+-    interface Number {
+-        /** 12.4 KB (1 KB = 1024 B) */
+-        to_fsize_str(this: number, units?: 'iec' | 'metric'): string;
+-        to_bin_str(this: number): string;
+-        to_hex_str(this: number, length?: number): string;
+-        to_oct_str(this: number): string;
+-    }
+-    interface Array<T> {
+-        indent(this: string[], width: number, c?: string): string[];
+-        /**
+-            - trim_line?: `true`
+-            - rm_empty_lines?: `true`
+-            - rm_last_empty_lines?: `false`
+-        */
+-        trim_lines(this: string[], { trim_line, rm_empty_lines, rm_last_empty_lines }?: {
+-            trim_line?: boolean;
+-            rm_empty_lines?: boolean;
+-            rm_last_empty_lines?: boolean;
+-        }): string[];
+-        /** - append?: `true` 是否在 join 之后增加 \n */
+-        join_lines(append?: boolean): string;
+-    }
+-    interface BigInt {
+-        toJSON(this: bigint): string;
+-    }
+-    interface Error {
+-        toJSON(this: Error): string;
+-    }
+-}
++//             - preservations?: `''` 保留的正则表达式字符
++//             - flags?: `''` 正则匹配选项
++//             - pattern_placeholder?: `/\{.*?\}/g`
++//         */
++//         find(this: string, pattern: string, preservations?: string, flags?: string, pattern_placeholder?: RegExp): Record<string, string>;
++//         /** - type?: `'single'` */
++//         quote(this: string, type?: keyof typeof quotes | 'psh'): string;
++//         /** - shape?: `'parenthesis'` */
++//         bracket(this: string, shape?: keyof typeof brackets): string;
++//         surround(this: string, left: string, right?: string): string;
++//         surround_tag(this: string, tag_name: string): string;
++//         to_lf(this: string): string;
++//         /** 'xxx'.replace(/pattern/g, '')
++//             如果 pattern 是 string 则在创建 RegExp 时自动加上 flags (默认 'g'), 否则忽略 flags */
++//         rm(this: string, pattern: string | RegExp, flags?: string): string;
++//         /** 将 string 划分为行，并去掉最后一个 \n 之后的 '' */
++//         split_lines(this: string): string[];
++//         split_indent(this: string): {
++//             indent: number;
++//             text: string;
++//         };
++//         space(this: string): string;
++//         /** 等价于 .endsWith('/') */
++//         isdir: boolean;
++//         /** 以 `/` 分割的路径，可能以 / 结尾 */
++//         fp: string;
++//         /** 以 `/` 分割的文件夹路径，一定以 / 结尾 */
++//         fpd: string;
++//         /** 父文件夹路径 (path.dirname)，一定以 `/` 结尾 */
++//         fdir: string;
++//         /** 文件名 (path.basename 的结果), 保留结尾的 /，如:
++//             - D:/0/aaa.txt -> aaa.txt
++//             - D:/aaa/ -> aaa/ */
++//         fname: string;
++//         /** .txt */
++//         fext: string;
++//     }
++//     interface Date {
++//         /** - ms?: `false` 显示到 ms */
++//         to_str(this: Date, ms?: boolean): string;
++//         to_date_str(this: Date): string;
++//         /** - ms?: `false` 显示到 ms */
++//         to_time_str(this: Date, ms?: boolean): string;
++//     }
++//     interface Number {
++//         /** 12.4 KB (1 KB = 1024 B) */
++//         to_fsize_str(this: number, units?: 'iec' | 'metric'): string;
++//         to_bin_str(this: number): string;
++//         to_hex_str(this: number, length?: number): string;
++//         to_oct_str(this: number): string;
++//     }
++//     interface Array<T> {
++//         indent(this: string[], width: number, c?: string): string[];
++//         /**
++//             - trim_line?: `true`
++//             - rm_empty_lines?: `true`
++//             - rm_last_empty_lines?: `false`
++//         */
++//         trim_lines(this: string[], { trim_line, rm_empty_lines, rm_last_empty_lines }?: {
++//             trim_line?: boolean;
++//             rm_empty_lines?: boolean;
++//             rm_last_empty_lines?: boolean;
++//         }): string[];
++//         /** - append?: `true` 是否在 join 之后增加 \n */
++//         join_lines(append?: boolean): string;
++//     }
++//     interface BigInt {
++//         toJSON(this: bigint): string;
++//     }
++//     interface Error {
++//         toJSON(this: Error): string;
++//     }
++// }
+ export declare const emoji_regex: RegExp;
+ export declare function to_method_property_descriptors(methods: {
+     [name: string]: Function;
+diff --git a/prototype.d.ts b/prototype.d.ts
+index 67b12b9086a72bc56efbbb6ae4228e9808c71a66..53e6cb71b394da22dcde9d7c7a2931dcf73c40f0 100644
+--- a/prototype.d.ts
++++ b/prototype.d.ts
+@@ -1,161 +1,161 @@
+ /// <reference types="node" resolution-mode="require"/>
+-declare global {
+-    var my_prototype_defined: boolean;
+-    interface String {
+-        readonly width: number;
+-        /** 截取字符串不超过 width 显示宽度的部分，并保留颜色
+-            找到并记录能容纳 字符串 + … 的最后一个字符的位置 i_fitted
+-                若完整的字符串长度超过 width，返回 slice(0, i_fitted + 1) + …
+-                否则                          返回 this
+-         */
+-        truncate(this: string, width: number): string;
+-        /** pad string to `<width>`
+-            - character?: `' '`
+-            - position?: `'right'` */
+-        pad(this: string, width: number, { character, position }?: {
+-            character?: string;
+-            position?: 'left' | 'right';
+-        }): string;
+-        limit(this: string, width: number, { character, position }?: {
+-            character?: string;
+-            position?: 'left' | 'right';
+-        }): string;
+-        to_regexp(this: string, preservations?: string, flags?: string): RegExp;
+-        /** 字符串模式替换
+-            - pattern: 匹配部分的格式
+-            - pattern_: 替换后的格式
+-            - preservations?: `''` 保留的正则表达式字符
+-            - flags?: `''` 正则匹配选项
+-            - transformer?: `(name, matched) => matched || ''` placeholder transformer
+-            - pattern_placeholder?: `/\{.*?\}/g`
++// declare global {
++//     var my_prototype_defined: boolean;
++//     interface String {
++//         readonly width: number;
++//         /** 截取字符串不超过 width 显示宽度的部分，并保留颜色
++//             找到并记录能容纳 字符串 + … 的最后一个字符的位置 i_fitted
++//                 若完整的字符串长度超过 width，返回 slice(0, i_fitted + 1) + …
++//                 否则                          返回 this
++//          */
++//         truncate(this: string, width: number): string;
++//         /** pad string to `<width>`
++//             - character?: `' '`
++//             - position?: `'right'` */
++//         pad(this: string, width: number, { character, position }?: {
++//             character?: string;
++//             position?: 'left' | 'right';
++//         }): string;
++//         limit(this: string, width: number, { character, position }?: {
++//             character?: string;
++//             position?: 'left' | 'right';
++//         }): string;
++//         to_regexp(this: string, preservations?: string, flags?: string): RegExp;
++//         /** 字符串模式替换
++//             - pattern: 匹配部分的格式
++//             - pattern_: 替换后的格式
++//             - preservations?: `''` 保留的正则表达式字符
++//             - flags?: `''` 正则匹配选项
++//             - transformer?: `(name, matched) => matched || ''` placeholder transformer
++//             - pattern_placeholder?: `/\{.*?\}/g`
+             
+-            ```ts
+-            'g:/acgn/海贼王/[Skytree][海贼王][One_Piece][893][GB_BIG5_JP][X264_AAC][1080P][CRRIP][天空树双语字幕组].mkv'.refmt(
+-                '{dirp}/[Skytree][海贼王][{ en_name: \\w+ }][{ episode: \\d+ }][GB_BIG5_JP][{encoding}_AAC][1080P][CRRIP][天空树双语字幕组].{format}',
+-                'g:/acgn/海贼王/{episode} {encoding}.{format}',
+-                '\\+',
+-                'i',
+-                (name, value) => name === 'episode'  ?  String(+value + 1)  :  value.toLowerCase()
+-            )
+-            ```
+-         */
+-        refmt(this: string, pattern: string, pattern_: string, preservations?: string, flags?: string, transformer?: (name: string, value: string, placeholders: {
+-            [name: string]: string;
+-        }) => string, pattern_placeholder?: RegExp): string;
+-        /** 字符串模式搜索
+-            ```ts
+-            'git+https://github.com/tamino-martinius/node-ts-dedent-123.git'.find(
+-                '^{protocol:[\\w+]+}://{hostname:[\\w\\.]+}/{username}/{project}-{index:\\d+}.{suffix}', '^', 'i'
+-            )
+-            {
+-                protocol: 'git+https',
+-                hostname: 'github.com',
+-                ...
+-            }
+-            ```
++//             ```ts
++//             'g:/acgn/海贼王/[Skytree][海贼王][One_Piece][893][GB_BIG5_JP][X264_AAC][1080P][CRRIP][天空树双语字幕组].mkv'.refmt(
++//                 '{dirp}/[Skytree][海贼王][{ en_name: \\w+ }][{ episode: \\d+ }][GB_BIG5_JP][{encoding}_AAC][1080P][CRRIP][天空树双语字幕组].{format}',
++//                 'g:/acgn/海贼王/{episode} {encoding}.{format}',
++//                 '\\+',
++//                 'i',
++//                 (name, value) => name === 'episode'  ?  String(+value + 1)  :  value.toLowerCase()
++//             )
++//             ```
++//          */
++//         refmt(this: string, pattern: string, pattern_: string, preservations?: string, flags?: string, transformer?: (name: string, value: string, placeholders: {
++//             [name: string]: string;
++//         }) => string, pattern_placeholder?: RegExp): string;
++//         /** 字符串模式搜索
++//             ```ts
++//             'git+https://github.com/tamino-martinius/node-ts-dedent-123.git'.find(
++//                 '^{protocol:[\\w+]+}://{hostname:[\\w\\.]+}/{username}/{project}-{index:\\d+}.{suffix}', '^', 'i'
++//             )
++//             {
++//                 protocol: 'git+https',
++//                 hostname: 'github.com',
++//                 ...
++//             }
++//             ```
+             
+-            - preservations?: `''` 保留的正则表达式字符
+-            - flags?: `''` 正则匹配选项
+-            - pattern_placeholder?: `/\{.*?\}/g`
+-        */
+-        find(this: string, pattern: string, preservations?: string, flags?: string, pattern_placeholder?: RegExp): Record<string, string>;
+-        /** - type?: `'single'` */
+-        quote(this: string, type?: keyof typeof quotes | 'psh'): string;
+-        /** - shape?: `'parenthesis'` */
+-        bracket(this: string, shape?: keyof typeof brackets): string;
+-        surround(this: string, left: string, right?: string): string;
+-        surround_tag(this: string, tag_name: string): string;
+-        to_lf(this: string): string;
+-        /** 'xxx'.replace(/pattern/g, '')
+-            如果 pattern 是 string 则在创建 RegExp 时自动加上 flags (默认 'g'), 否则忽略 flags
+-        */
+-        rm(this: string, pattern: string | RegExp, flags?: string): string;
+-        readonly red: string;
+-        readonly red_: string;
+-        readonly green: string;
+-        readonly green_: string;
+-        readonly yellow: string;
+-        readonly yellow_: string;
+-        readonly blue: string;
+-        readonly blue_: string;
+-        readonly magenta: string;
+-        readonly magenta_: string;
+-        readonly cyan: string;
+-        readonly cyan_: string;
+-        readonly grey: string;
+-        readonly underline: string;
+-        strip_ansi(this: string): string;
+-        /** 将 string 划分为行，并去掉最后一个 \n 之后的 '' */
+-        split_lines(this: string): string[];
+-        split_indent(this: string): {
+-            indent: number;
+-            text: string;
+-        };
+-        to_base64(this: string): string;
+-        /** - buffer: `false` 直接返回 Buffer */
+-        decode_base64(this: string): string;
+-        decode_base64(this: string, buffer: true): Buffer;
+-        decode_base64(this: string, buffer?: boolean): string | Buffer;
+-        space(this: string): string;
+-        /** 等价于 .endsWith('/') */
+-        isdir: boolean;
+-        /** 以 `/` 分割的路径，可能以 / 结尾 */
+-        fp: string;
+-        /** 以 `/` 分割的文件夹路径，一定以 / 结尾 */
+-        fpd: string;
+-        /** 父文件夹路径 (path.dirname)，一定以 `/` 结尾 */
+-        fdir: string;
+-        /** 文件名 (path.basename 的结果), 保留结尾的 /，如:
+-            - D:/0/aaa.txt -> aaa.txt
+-            - D:/aaa/ -> aaa/ */
+-        fname: string;
+-        /** .txt */
+-        fext: string;
+-        to_backslash(this: string): string;
+-    }
+-    interface Date {
+-        /** - ms?: `false` 显示到 ms */
+-        to_str(this: Date, ms?: boolean): string;
+-        to_date_str(this: Date): string;
+-        /** - ms?: `false` 显示到 ms */
+-        to_time_str(this: Date, ms?: boolean): string;
+-    }
+-    interface Number {
+-        /** 12.4 KB (1 KB = 1024 B) */
+-        to_fsize_str(this: number, units?: 'iec' | 'metric'): string;
+-        to_bin_str(this: number): string;
+-        to_hex_str(this: number, length?: number): string;
+-        to_oct_str(this: number): string;
+-    }
+-    interface Array<T> {
+-        log(this: string[], limit?: number): void;
+-        indent(this: string[], width: number, c?: string): string[];
+-        indent2to4(this: string[]): string[];
+-        /**
+-            - trim_line?: `true`
+-            - rm_empty_lines?: `true`
+-            - rm_last_empty_lines?: `false`
+-        */
+-        trim_lines(this: string[], { trim_line, rm_empty_lines, rm_last_empty_lines }?: {
+-            trim_line?: boolean;
+-            rm_empty_lines?: boolean;
+-            rm_last_empty_lines?: boolean;
+-        }): string[];
+-        trim_license(this: string[]): string[];
+-        split_indents(this: string[]): {
+-            indent: number;
+-            text: string;
+-        }[];
+-        /** - append?: `true` 是否在 join 之后增加 \n */
+-        join_lines(append?: boolean): string;
+-    }
+-    interface BigInt {
+-        toJSON(this: bigint): string;
+-    }
+-    interface Error {
+-        toJSON(this: Error): string;
+-    }
+-}
++//             - preservations?: `''` 保留的正则表达式字符
++//             - flags?: `''` 正则匹配选项
++//             - pattern_placeholder?: `/\{.*?\}/g`
++//         */
++//         find(this: string, pattern: string, preservations?: string, flags?: string, pattern_placeholder?: RegExp): Record<string, string>;
++//         /** - type?: `'single'` */
++//         quote(this: string, type?: keyof typeof quotes | 'psh'): string;
++//         /** - shape?: `'parenthesis'` */
++//         bracket(this: string, shape?: keyof typeof brackets): string;
++//         surround(this: string, left: string, right?: string): string;
++//         surround_tag(this: string, tag_name: string): string;
++//         to_lf(this: string): string;
++//         /** 'xxx'.replace(/pattern/g, '')
++//             如果 pattern 是 string 则在创建 RegExp 时自动加上 flags (默认 'g'), 否则忽略 flags
++//         */
++//         rm(this: string, pattern: string | RegExp, flags?: string): string;
++//         readonly red: string;
++//         readonly red_: string;
++//         readonly green: string;
++//         readonly green_: string;
++//         readonly yellow: string;
++//         readonly yellow_: string;
++//         readonly blue: string;
++//         readonly blue_: string;
++//         readonly magenta: string;
++//         readonly magenta_: string;
++//         readonly cyan: string;
++//         readonly cyan_: string;
++//         readonly grey: string;
++//         readonly underline: string;
++//         strip_ansi(this: string): string;
++//         /** 将 string 划分为行，并去掉最后一个 \n 之后的 '' */
++//         split_lines(this: string): string[];
++//         split_indent(this: string): {
++//             indent: number;
++//             text: string;
++//         };
++//         to_base64(this: string): string;
++//         /** - buffer: `false` 直接返回 Buffer */
++//         decode_base64(this: string): string;
++//         decode_base64(this: string, buffer: true): Buffer;
++//         decode_base64(this: string, buffer?: boolean): string | Buffer;
++//         space(this: string): string;
++//         /** 等价于 .endsWith('/') */
++//         isdir: boolean;
++//         /** 以 `/` 分割的路径，可能以 / 结尾 */
++//         fp: string;
++//         /** 以 `/` 分割的文件夹路径，一定以 / 结尾 */
++//         fpd: string;
++//         /** 父文件夹路径 (path.dirname)，一定以 `/` 结尾 */
++//         fdir: string;
++//         /** 文件名 (path.basename 的结果), 保留结尾的 /，如:
++//             - D:/0/aaa.txt -> aaa.txt
++//             - D:/aaa/ -> aaa/ */
++//         fname: string;
++//         /** .txt */
++//         fext: string;
++//         to_backslash(this: string): string;
++//     }
++//     interface Date {
++//         /** - ms?: `false` 显示到 ms */
++//         to_str(this: Date, ms?: boolean): string;
++//         to_date_str(this: Date): string;
++//         /** - ms?: `false` 显示到 ms */
++//         to_time_str(this: Date, ms?: boolean): string;
++//     }
++//     interface Number {
++//         /** 12.4 KB (1 KB = 1024 B) */
++//         to_fsize_str(this: number, units?: 'iec' | 'metric'): string;
++//         to_bin_str(this: number): string;
++//         to_hex_str(this: number, length?: number): string;
++//         to_oct_str(this: number): string;
++//     }
++//     interface Array<T> {
++//         log(this: string[], limit?: number): void;
++//         indent(this: string[], width: number, c?: string): string[];
++//         indent2to4(this: string[]): string[];
++//         /**
++//             - trim_line?: `true`
++//             - rm_empty_lines?: `true`
++//             - rm_last_empty_lines?: `false`
++//         */
++//         trim_lines(this: string[], { trim_line, rm_empty_lines, rm_last_empty_lines }?: {
++//             trim_line?: boolean;
++//             rm_empty_lines?: boolean;
++//             rm_last_empty_lines?: boolean;
++//         }): string[];
++//         trim_license(this: string[]): string[];
++//         split_indents(this: string[]): {
++//             indent: number;
++//             text: string;
++//         }[];
++//         /** - append?: `true` 是否在 join 之后增加 \n */
++//         join_lines(append?: boolean): string;
++//     }
++//     interface BigInt {
++//         toJSON(this: bigint): string;
++//     }
++//     interface Error {
++//         toJSON(this: Error): string;
++//     }
++// }
+ import chalk from 'chalk';
+ export declare const emoji_regex: RegExp;
+ export { chalk };
+diff --git a/repl.d.ts b/repl.d.ts
+index 8cef0abbb4ceb425b5220ad911558a90c3da3dd0..6e24fcd2ec4771b452c69b8bf5c9cea934804852 100644
+--- a/repl.d.ts
++++ b/repl.d.ts
+@@ -1,10 +1,10 @@
+ import type { Context } from 'koa';
+ import './prototype.js';
+-declare global {
+-    var __: any;
+-    var tstarted: Date;
+-    var repl_router: (ctx: Context) => Promise<boolean>;
+-}
++// declare global {
++//     var __: any;
++//     var tstarted: Date;
++//     var repl_router: (ctx: Context) => Promise<boolean>;
++// }
+ /** 谨慎使用，webpack 打包后可能会变成 /d:/1/mod/node_modules/xshell/ 这样的编译期路径 */
+ export declare const fpd_root: string;
+ export declare function start_repl(): Promise<void>;
