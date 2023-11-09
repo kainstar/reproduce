@@ -12,7 +12,7 @@ export default defineConfig({
   },
   builderConfig: {
     output: {
-      copy: [{ from: "public", to: "" }],
+      copy: [{ from: "./public", to: "" }],
     },
   },
 });
