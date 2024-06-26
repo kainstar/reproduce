@@ -1,0 +1,23 @@
+{
+  "name": "histoire-vite-node-too-old",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "histoire:dev": "histoire dev",
+    "vite:dev": "vite"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@histoire/plugin-vue": "^0.17.17",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "histoire": "^0.17.17",
+    "vite": "^5.3.1"
+  },
+  "dependencies": {
+    "lucide-vue-next": "^0.397.0",
+    "vue": "^3.4.30"
+  }
+}
